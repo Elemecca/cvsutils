@@ -47,24 +47,13 @@ use Cvs ();
 #
 
 #######################################################################
-# Globals                                                             #
-#######################################################################
-
-# verstion number
-our $VERSION = 0.1;
-
-# whether to enable debugging output
-our $debug = 0;
-
-# whether to show uninteresting files
-our $show_all = 0;
-
-#######################################################################
 # Subroutines                                                         #
 #######################################################################
 
 sub print_status_line ($) {
     my ($file) = @_;
+    our $opt_show_all;
+
     my $status = $file->status;
     my ($work, $repo) = (" ", " ");
 
@@ -73,7 +62,7 @@ sub print_status_line ($) {
     my $rev_repo = $file->repository_revision;
 
     if ($status eq "Up-to-date") {
-        return unless $show_all;
+        return unless $opt_show_all;
     } elsif ($status eq "Unknown") {
         ($exists ? $work : $repo) = "?";
     } elsif ($status eq "Locally Modified") {
@@ -120,12 +109,25 @@ sub callback_file ($) {
 }
 
 #######################################################################
+# Globals                                                             #
+#######################################################################
+
+# version number
+$main::VERSION = 0.1;
+
+# whether to enable debugging output
+our $debug = 0;
+
+# whether to show uninteresting files
+our $opt_show_all = 0;
+
+#######################################################################
 # Executable Entry Point                                              #
 #######################################################################
 
 # Parse command line arguments
 Getopt::Long::GetOptions(
-        'a|show-all!'   => \$show_all,
+        'a|show-all!'   => \$opt_show_all,
         'debug'         => \$debug,
         'manual'        => sub {
                 pod2usage( -verbose => 2, -exitval => 0 );
