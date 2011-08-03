@@ -63,16 +63,14 @@ our $show_all = 0;
 # Subroutines                                                         #
 #######################################################################
 
-sub status_callback ($) {
-    my ($item) = @_;
-    my $status = $item->status;
+sub print_status_line ($) {
+    my ($file) = @_;
+    my $status = $file->status;
     my ($work, $repo) = (" ", " ");
 
-    my $exists = $item->exists;
-    my $rev_work = $item->working_revision;
-    my $rev_repo = $item->repository_revision;
-
-    print $item->filename . ": " . $item->message . "\n" if ($item->message);
+    my $exists = $file->exists;
+    my $rev_work = $file->working_revision;
+    my $rev_repo = $file->repository_revision;
 
     if ($status eq "Up-to-date") {
         return unless $show_all;
@@ -107,10 +105,18 @@ sub status_callback ($) {
     }
 
     my $line = $work . $repo . " ";
-    $line .= $item->basedir . "/" if (($item->basedir or ".") ne ".");
-    $line .= $item->filename;
+    $line .= $file->basedir . "/" if (($file->basedir or ".") ne ".");
+    $line .= $file->filename;
 
     print $line . "\n";
+}
+
+sub callback_file ($) {
+    my ($file) = @_;
+
+    print $file->filename . ": " . $file->message . "\n" if ($file->message);
+
+    print_status_line( $file );
 }
 
 #######################################################################
@@ -134,7 +140,7 @@ if (!$cvs) {
 }
 
 # Get status info for everything
-my $result = $cvs->status( @ARGV, { callback => \&status_callback } );
+my $result = $cvs->status( @ARGV, { callback => \&callback_file } );
 if (!$result) {
     print STDERR "Error running status command: " . $cvs->error . "\n";
     exit 2;
