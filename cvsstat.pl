@@ -56,7 +56,7 @@ sub print_status_line ($) {
 
     my $status = $file->status;
     my $message = ($file->message or "");
-    my ($work, $repo) = (" ", " ");
+    my ($work, $repo) = ("#", "#");
 
     my $exists = $file->exists;
     my $rev_work = $file->working_revision;
@@ -64,22 +64,29 @@ sub print_status_line ($) {
 
     if ($status eq "Up-to-date") {
         return unless $opt_show_all;
+        $work = $repo = " ";
     } elsif ($status eq "Unknown") {
+        $work = $repo = " ";
         ($exists ? $work : $repo) = "?";
     } elsif ($status eq "Locally Modified") {
         $work = "M";
+        $repo = " ";
     } elsif ($status eq "Locally Added") {
         $work = "A";
+        $repo = " ";
     } elsif ($status eq "Locally Removed") {
         $work = "D";
+        $repo = " ";
     } elsif ($status eq "Needs Patch") {
+        $work = " ";
         $repo = "M";
     } elsif ($status eq "Needs Checkout") {
         if (!$rev_work) {
+            $work = " ";
             $repo = "A";
         } else {
-            $work = "!" if (!$exists);
-            $repo = "M" if ($rev_work ne $rev_repo);
+            $work = $exists ? " " : "!";
+            $repo = ($rev_work ne $rev_repo) ? "M" : " ";
         }
     } elsif ($status eq "Needs Merge") {
         $work = "M";
@@ -90,6 +97,7 @@ sub print_status_line ($) {
             $repo = "A";
         } else {
             $work = "C";
+            $repo = " ";
         }
     }
 
