@@ -55,6 +55,7 @@ sub print_status_line ($) {
     our $opt_show_all;
 
     my $status = $file->status;
+    my $message = ($file->message or "");
     my ($work, $repo) = (" ", " ");
 
     my $exists = $file->exists;
@@ -75,7 +76,6 @@ sub print_status_line ($) {
         $repo = "M";
     } elsif ($status eq "Needs Checkout") {
         if (!$rev_work) {
-            $work = "?" if ($exists);
             $repo = "A";
         } else {
             $work = "!" if (!$exists);
@@ -86,7 +86,7 @@ sub print_status_line ($) {
         $repo = "M";
     } elsif ($status eq "Unresolved Conflict") {
         if (!$rev_work) {
-            $work = "?";
+            $work = $message =~ /created independently/ ? "A" : "?";
             $repo = "A";
         } else {
             $work = "C";
@@ -102,9 +102,6 @@ sub print_status_line ($) {
 
 sub callback_file ($) {
     my ($file) = @_;
-
-    print $file->filename . ": " . $file->message . "\n" if ($file->message);
-
     print_status_line( $file );
 }
 
