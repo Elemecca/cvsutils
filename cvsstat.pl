@@ -92,9 +92,17 @@ sub print_status_line ($) {
         $work = "M";
         $repo = "M";
     } elsif ($status eq "Unresolved Conflict") {
-        if (!$rev_work) {
-            $work = $message =~ /created independently/ ? "A" : "?";
-            $repo = "A";
+        if ($message =~ /created independently/) {
+            $work = $repo = "A";
+        } elsif ($message =~ /it is in the way/) {
+            $work = "?";
+            $repo = "A"; # XXX: this is not necessarily right
+        } elsif ($message =~ /was modified by second/) {
+            $work = "D";
+            $repo = "M";
+        } elsif ($message =~ /modified but no longer/) {
+            $work = "M";
+            $repo = "D";
         } else {
             $work = "C";
             $repo = " ";
