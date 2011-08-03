@@ -91,6 +91,9 @@ sub print_status_line ($) {
     } elsif ($status eq "Needs Merge") {
         $work = "M";
         $repo = "M";
+    } elsif ($status eq "Entry Invalid") {
+        $work = $rev_work ? " " : "D";
+        $repo = "D";
     } elsif ($status eq "Unresolved Conflict") {
         if ($message =~ /created independently/) {
             $work = $repo = "A";
@@ -126,7 +129,7 @@ sub callback_file ($) {
 #######################################################################
 
 # version number
-$main::VERSION = 0.1;
+$main::VERSION = 0.2;
 
 # whether to enable debugging output
 our $debug = 0;
