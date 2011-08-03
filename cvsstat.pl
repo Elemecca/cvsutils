@@ -14,6 +14,7 @@ use Cvs ();
 # Working copy states:
 #   File status normal
 # ? File exists but not in Entries
+# ~ versioned file obstructed by local file not in Entries
 # ! File in entries but missing
 # A File scheduled for addition
 # D File scheduled for removal
@@ -34,7 +35,7 @@ use Cvs ();
 #  D File deleted remotely
 #  M File modified remotely
 # ?  Unversioned file exists locally
-# ?A Remote add obstructed by unversioned local file
+# ~  Remote file obstructed by unversioned local file
 # A  File scheduled for addition
 # AA File added locally and remotely, needs merge
 # D  File scheduled for removal
@@ -89,8 +90,7 @@ sub print_status_line ($) {
             $repo = ($rev_work ne $rev_repo) ? "M" : " ";
         }
     } elsif ($status eq "Needs Merge") {
-        $work = "M";
-        $repo = "M";
+        $work = $repo = "M";
     } elsif ($status eq "Entry Invalid") {
         $work = $rev_work ? " " : "D";
         $repo = "D";
@@ -98,8 +98,8 @@ sub print_status_line ($) {
         if ($message =~ /created independently/) {
             $work = $repo = "A";
         } elsif ($message =~ /it is in the way/) {
-            $work = "?";
-            $repo = "A"; # XXX: this is not necessarily right
+            $work = "~";
+            $repo = " ";
         } elsif ($message =~ /was modified by second/) {
             $work = "D";
             $repo = "M";
