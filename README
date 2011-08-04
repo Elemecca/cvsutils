@@ -1,0 +1,33 @@
+cvsutils
+========
+
+cvsutils is a set of utility programs that address limitations and
+missing features in the official CVS command-line interface. The
+utilities are written in Perl and call CVS via the Cvs module. 
+
+== PROGRAMS ==
+
+* cvsstat
+
+Generates a report of the current state of a working copy in a format
+similar to that used by Subversion's 'svn status' command. It's more
+useful for checking the state of your checkout than 'cvs status',
+which produces a mostly irrelevant wall o' text. It produces most of
+the same information as 'cvs -n update -d' but with more detail and in
+a much more readable format.
+
+In the future I plan to have it parse the sticky tags. Once it does it
+will tell you what branch you're on and warn of any inconsistencies.
+
+== CONTRIBUTING ==
+
+The source code is maintained on GitHub at
+https://github.com/Elemecca/cvsutils
+
+Patches, bug reports, and suggestions are welcome. I'd prefer that you
+send me a pull request or submit an issue on GitHub. If you can't or
+don't want to use GitHub, you can send me email at <sam@maltera.com>.
+
+== AUTHORS ==
+
+Sam Hanes <sam@maltera.com>

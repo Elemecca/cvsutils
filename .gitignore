@@ -1,0 +1,8 @@
+# .gitignore - file ignore patterns for git
+
+# build output
+/blib/
+/_build/
+/Build
+*.tmp
+
